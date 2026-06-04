@@ -1,31 +1,120 @@
 @startuml
+top to bottom direction
 skinparam shadowing false
+skinparam packageStyle rectangle
 
-package Client {
-  [Browser\nindex.html + app.js] as Browser
+title Tekhnicheskaya diagramma (sverhu vniz)
+
+package "1. Vneshnie biblioteki" as P1 {
+  [sys, os, threading, webbrowser, time]
+  [json, io, datetime]
+  [Flask, render_template, request, jsonify, send_file]
+  [PyInstaller _MEIPASS]
 }
 
-package Server {
-  [main.py] as Main
-  [webgui.app Flask] as App
+package "2. main.py - importy" as P2 {
+  [import sys, os, threading, webbrowser, time]
+  [from webgui.app import app]
 }
 
-package Storage {
-  file "history.json" as History
-  file "TEMPLATES" as Templates
+package "3. main.py - metody" as P3 {
+  class main_py {
+    +resource_path()
+    +open_browser()
+    __main__: Thread + app.run()
+  }
 }
 
-package Build {
-  [GreetingGeneratorPro.exe] as Exe
-  file "icon.ico" as Icon
+package "4. webgui/app.py - importy" as P4 {
+  [from flask import Flask, render_template, request, jsonify, send_file]
+  [from datetime import datetime]
+  [import json, io, os]
 }
 
-Browser --> App : GET /\nPOST /api/generate\nGET /api/history\nDELETE /api/history\nPOST /api/download
-Main --> App
-App --> History
-App --> Templates
-Exe --> Main
-Exe --> Browser : webbrowser 127.0.0.1:5000
-Exe --> Icon
+package "5. webgui/app.py - modul" as P5 {
+  class app_data {
+    app : Flask
+    GREETING_TYPES
+    TEMPLATES
+    HISTORY_FILE
+  }
+}
+
+package "6. webgui/app.py - metody" as P6 {
+  class backend {
+    +load_history()
+    +save_history(items)
+    +render_template_text()
+    +index()
+    +api_generate()
+    +api_history()
+    +api_history_clear()
+    +api_download()
+  }
+}
+
+package "7. Cikly Python" as P7 {
+  class loops_py {
+    for k,v in safe.items()
+    next(t for t in tpls)
+    hist.insert + hist[:50]
+  }
+}
+
+package "8. app.js - sostoyanie" as P8 {
+  class js_state {
+    state {type, templateId, previewDirty}
+    historyItems[]
+    EMOJIS[]
+  }
+}
+
+package "9. app.js - funkcii" as P9 {
+  class js_funcs {
+    applyTheme()
+    renderTemplateChips()
+    clientRender()
+    renderPreview()
+    generate()
+    renderHistory()
+    loadHistory()
+    insertAtCursor()
+    wrapSelection()
+    restoreFont()
+  }
+}
+
+package "10. Cikly JavaScript" as P10 {
+  class loops_js {
+    list.forEach()
+    querySelectorAll.forEach()
+    fields.forEach()
+    filtered.forEach()
+    EMOJIS.forEach()
+    historyItems.filter()
+  }
+}
+
+package "11. Faily" as P11 {
+  file history.json
+  file index.html
+  file style.css
+}
+
+P1 -down-> P2
+P2 -down-> P3
+P3 -down-> P4
+P4 -down-> P5
+P5 -down-> P6
+P6 -down-> P7
+P7 -down-> P8
+P8 -down-> P9
+P9 -down-> P10
+P10 -down-> P11
+
+backend ..> loops_py
+js_funcs ..> loops_js
+js_funcs ..> backend : fetch API
+backend ..> history.json
 
 @enduml

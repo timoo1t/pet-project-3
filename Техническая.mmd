@@ -1,0 +1,78 @@
+%%{init: {'flowchart': {'rankSpacing': 40, 'nodeSpacing': 25}}}%%
+flowchart TB
+
+  subgraph L1["1. Импорт внешних библиотек"]
+    lib_std["stdlib: sys, os, threading, webbrowser, time, json, io, datetime"]
+    lib_flask["flask: Flask, render_template, request, jsonify, send_file"]
+    lib_build["PyInstaller: _MEIPASS"]
+  end
+
+  subgraph L2["2. main.py — импорты"]
+    imp_main["import sys, os, threading, webbrowser, time<br/>from webgui.app import app"]
+  end
+
+  subgraph L3["3. main.py — методы"]
+    m_res["+ resource_path(relative_path)"]
+    m_br["+ open_browser() — time.sleep, webbrowser.open"]
+    m_run["__main__: Thread(open_browser).start()<br/>app.run(127.0.0.1:5000)"]
+  end
+
+  subgraph L4["4. webgui/app.py — импорты"]
+    imp_app["from flask import Flask, render_template, request, jsonify, send_file<br/>from datetime import datetime<br/>import json, io, os"]
+  end
+
+  subgraph L5["5. Модуль app — данные"]
+    d_app["app = Flask(...)<br/>GREETING_TYPES, TEMPLATES<br/>HISTORY_FILE"]
+  end
+
+  subgraph L6["6. webgui/app.py — методы"]
+    f_load["+ load_history()"]
+    f_save["+ save_history(items)"]
+    f_render["+ render_template_text(tpl, data)"]
+    f_idx["+ index() → index.html"]
+    f_gen["+ api_generate() POST"]
+    f_hist["+ api_history() GET"]
+    f_clr["+ api_history_clear() DELETE"]
+    f_dl["+ api_download() POST"]
+  end
+
+  subgraph L7["7. Циклы Python"]
+    loop_py1["for k, v in safe.items(): text.replace"]
+    loop_py2["next(t for t in tpls if id match)"]
+    loop_py3["hist.insert(0, entry); hist = hist[:50]"]
+  end
+
+  subgraph L8["8. app.js — состояние"]
+    st["state: type, templateId, previewDirty<br/>historyItems[], EMOJIS[]"]
+  end
+
+  subgraph L9["9. app.js — функции"]
+    js1["applyTheme, renderTemplateChips"]
+    js2["clientRender, renderPreview, schedulePreview"]
+    js3["generate, loadHistory, renderHistory"]
+    js4["insertAtCursor, wrapSelection, restoreFont"]
+  end
+
+  subgraph L10["10. Циклы JavaScript"]
+    loop_js1["list.forEach — шаблоны и чипы"]
+    loop_js2["querySelectorAll.forEach — типы"]
+    loop_js3["fields.forEach — input listeners"]
+    loop_js4["filtered.forEach — список истории"]
+    loop_js5["EMOJIS.forEach — кнопки эмодзи"]
+    loop_js6["historyItems.filter — поиск"]
+  end
+
+  subgraph L11["11. Файлы"]
+    files["history.json | index.html | style.css | app.js"]
+  end
+
+  L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7 --> L8 --> L9 --> L10 --> L11
+  f_render --> loop_py1
+  f_gen --> loop_py2
+  f_gen --> loop_py3
+  js3 --> loop_js4
+  js3 --> loop_js6
+  f_gen -.->|fetch /api/generate| js3
+  f_hist -.->|fetch /api/history| js3
+  f_save --> files
+  f_idx --> files
