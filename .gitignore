@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+build/
+.claude/
+*.pyo
+.env
+history.json
+dist/history.json

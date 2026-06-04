@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>Генератор поздравлений</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>Генератор поздравлений Pro</h1>
+  <div class="header-right">
+    <button class="ghost theme-btn" id="themeBtn" title="Сменить тему">🌙</button>
+  </div>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>1. Тип поздравления</h2>
+    <div class="chips" id="typeChips">
+      {% for key, label in greeting_types.items() %}
+      <button class="chip{% if loop.first %} active{% endif %}" data-type="{{ key }}">{{ label }}</button>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>2. Данные</h2>
+    <div class="grid">
+      <label>Имя получателя
+        <input type="text" id="name" placeholder="Например, Анна">
+      </label>
+      <label>Возраст / дата
+        <input type="text" id="age" placeholder="Например, 30">
+      </label>
+      <label>Отправитель
+        <input type="text" id="sender" placeholder="Ваше имя">
+      </label>
+      <label>Дополнительные пожелания
+        <input type="text" id="wishes" placeholder="Что-то от себя (необязательно)">
+      </label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>3. Шаблон</h2>
+    <div class="chips" id="templateChips"></div>
+  </section>
+
+  <section class="panel">
+    <div class="actions">
+      <button class="primary" id="generateBtn">Сгенерировать</button>
+      <button id="copyBtn">Копировать</button>
+      <button id="downloadBtn">Сохранить в файл</button>
+      <button id="clearFormBtn">Очистить форму</button>
+    </div>
+    <div class="fmt-toolbar">
+      <button class="fmt-btn" id="boldBtn" title="Жирный (Ctrl+B)"><b>B</b></button>
+      <button class="fmt-btn" id="italicBtn" title="Курсив (Ctrl+I)"><i>I</i></button>
+      <div class="emoji-wrap">
+        <button class="fmt-btn" id="emojiBtn" title="Вставить эмодзи">😊</button>
+        <div class="emoji-picker" id="emojiPicker"></div>
+      </div>
+      <div class="fmt-sep"></div>
+      <select id="fontSelect" class="font-select" title="Шрифт">
+        <option value="monospace">Monospace</option>
+        <option value="'Segoe UI', sans-serif">Segoe UI</option>
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="'Times New Roman', serif">Times New Roman</option>
+        <option value="'Courier New', monospace">Courier New</option>
+        <option value="Verdana, sans-serif">Verdana</option>
+        <option value="'Comic Sans MS', cursive">Comic Sans</option>
+      </select>
+      <select id="fontSizeSelect" class="font-select" title="Размер шрифта">
+        <option value="11px">11px</option>
+        <option value="13px" selected>13px</option>
+        <option value="15px">15px</option>
+        <option value="17px">17px</option>
+        <option value="20px">20px</option>
+      </select>
+    </div>
+    <textarea id="result" rows="14" placeholder="Здесь появится текст поздравления — его можно отредактировать вручную"></textarea>
+  </section>
+
+  <section class="panel">
+    <div class="row">
+      <h2>История</h2>
+      <button class="ghost" id="clearHistoryBtn">Очистить историю</button>
+    </div>
+    <input type="text" id="historySearch" placeholder="Поиск по имени, типу или шаблону...">
+    <ul id="history" class="history"></ul>
+  </section>
+</main>
+
+<script>
+window.TEMPLATES = {{ templates | tojson }};
+</script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

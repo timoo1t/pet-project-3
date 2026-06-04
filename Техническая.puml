@@ -1,0 +1,31 @@
+@startuml
+skinparam shadowing false
+
+package Client {
+  [Browser\nindex.html + app.js] as Browser
+}
+
+package Server {
+  [main.py] as Main
+  [webgui.app Flask] as App
+}
+
+package Storage {
+  file "history.json" as History
+  file "TEMPLATES" as Templates
+}
+
+package Build {
+  [GreetingGeneratorPro.exe] as Exe
+  file "icon.ico" as Icon
+}
+
+Browser --> App : GET /\nPOST /api/generate\nGET /api/history\nDELETE /api/history\nPOST /api/download
+Main --> App
+App --> History
+App --> Templates
+Exe --> Main
+Exe --> Browser : webbrowser 127.0.0.1:5000
+Exe --> Icon
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml Пользовательский
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+actor "Пользователь" as User
+
+rectangle "Генератор поздравлений Pro" {
+  usecase "Запустить приложение" as UC1
+  usecase "Выбрать тип поздравления" as UC2
+  usecase "Ввести данные получателя" as UC3
+  usecase "Выбрать шаблон текста" as UC4
+  usecase "Предпросмотр поздравления" as UC5
+  usecase "Сгенерировать поздравление" as UC6
+  usecase "Редактировать текст" as UC7
+  usecase "Форматировать текст\n(жирный, курсив, эмодзи)" as UC8
+  usecase "Скопировать в буфер" as UC9
+  usecase "Скачать в файл .txt" as UC10
+  usecase "Просмотреть историю" as UC11
+  usecase "Поиск по истории" as UC12
+  usecase "Загрузить из истории" as UC13
+  usecase "Очистить историю" as UC14
+  usecase "Сменить тему оформления" as UC15
+  usecase "Очистить форму" as UC16
+}
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+User --> UC9
+User --> UC10
+User --> UC11
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC16
+
+UC6 ..> UC5 : <<include>>
+UC6 ..> UC11 : <<include>>
+UC13 ..> UC7 : <<extend>>
+UC10 ..> UC7 : <<extend>>
+
+@enduml
